@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GCP Resource Summary</title>
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2; /* Light gray background for headers */
+}
+</style>
+</head>
+<body>
+
+<h1>GCP Resource Summary</h1>
+
+{% for category, items in data.items() %}  <h2>{{ category|capitalize }}</h2>  <table>
+        <thead>
+            <tr>
+                {% if items %}  {% for key in items.keys() %}  <th>{{ key }}</th>
+                    {% endfor %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}  <tr>
+                    {% for value in item.values() %}  <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+
+</body>
+</html>

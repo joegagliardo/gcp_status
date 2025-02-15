@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GCP Resource Summary</title>
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px; /* Add space between tables */
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2; /* Light gray background for headers */
+}
+</style>
+</head>
+<body>
+
+<h1>GCP Resource Summary</h1>
+
+<h2>Compute Instances</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in data.compute_keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.compute %}
+            <tr>
+                {% for key in data.compute_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>SQL Instances</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in data.sql_keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.sql %}
+            <tr>
+                {% for key in data.sql_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>GKE Clusters</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in data.gke_keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.gke %}
+            <tr>
+                {% for key in data.gke_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
