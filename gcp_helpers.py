@@ -14,6 +14,15 @@ from googleapiclient import discovery
 # secret_id = "gcp_status_secret"
 # json_key = access_secret_version(project_id, secret_id)
 
+def get_config_from_gcs(bucket_name, blob_name):
+    """Downloads a blob from the bucket."""
+    from google.cloud import storage
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    contents = blob.download_as_text()
+    return json.loads(contents)
+
 def get_project_number(project_id):
     """Given a project id, return the project number"""
 
@@ -32,9 +41,14 @@ def get_project_number(project_id):
     
 class GCP_Helpers():
     def __init__(self, config = None, zones = None):
+        from google.cloud import storage
         self.credentials = None
         if config is None:
-            if os.path.exists('config.json'):
+            config_env = os.environ['config']
+            if config_env.startswith('gs://'):
+                bucket_name, blob_name = config_env[5:].split('/')
+                self.config = get_config_from_gcs(bucket_name, blob_name)
+            elif os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
                     data = f.read()
                     self.config = json.loads(data)
