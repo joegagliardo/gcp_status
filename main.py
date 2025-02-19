@@ -8,8 +8,10 @@ from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 #from gcp_helpers import list_zones, get_compute_engine_status, get_cloud_sql_status, get_gke_cluster_status, get_compute_summary
 from gcp_helpers import GCP_Helpers
+import logging
 
 app = Flask(__name__)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # global_config = None
 # global_zones = None
@@ -33,6 +35,7 @@ def get_compute_summary_ws():
     return jsonify(data), 200
 
 if __name__ == "__main__":
+    logging.info("Start Main")
     # parser = argparse.ArgumentParser(description="Get GCP resource status.")
     # parser.add_argument(
     #     "--project_id",
@@ -65,7 +68,11 @@ if __name__ == "__main__":
     #             if any(zone.startswith(prefix) for prefix in region_prefixes)})
     # else:
     #     global_zones = list(set(global_zones))
+    logging.info("Start GCP_Helpers")
     h = GCP_Helpers()
+    logging.info("End GCP_Helpers")
+    
+    logging.info("Start app.run")
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
     # x = get_compute_summary(config)

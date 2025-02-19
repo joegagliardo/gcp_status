@@ -4,8 +4,35 @@ import argparse
 from flask import Flask, request, jsonify, render_template
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+from google.cloud import secretmanager
+from google.cloud import resourcemanager
+from google.oauth2 import service_account
+from googleapiclient import discovery
+
+# Example usage:
+# project_id = "surfn-peru"
+# secret_id = "gcp_status_secret"
+# json_key = access_secret_version(project_id, secret_id)
+
+def get_project_number(project_id):
+    """Given a project id, return the project number"""
+
+    # Create a client
+    client = resourcemanager.ProjectsClient()
+    # Initialize request argument(s)
+    request = resourcemanager.SearchProjectsRequest()
+    # Make the request
+    page_result = client.search_projects(request=request)
+    # Handle the response
+    for response in page_result:
+        if response.project_id == project_id:
+            project = response.name
+            return project.replace('projects/', '')
+    return None
+    
 class GCP_Helpers():
     def __init__(self, config = None, zones = None):
+        self.credentials = None
         if config is None:
             if os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
@@ -19,10 +46,51 @@ class GCP_Helpers():
         else:
             self.zones = zones
 
+    def access_secret_version(self):
+        """
+        Access the payload for the given secret version if one exists. The version
+        can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
+        """
+        project_id = self.config['projects'][0]
+        secret_id = self.config['secret_id']
+        version_id="latest"
+        project_number = get_project_number(project_id)
+        
+        # Create the Secret Manager client.
+        client = secretmanager.SecretManagerServiceClient()
+
+        # Build the resource name of the secret version.
+        name = f"projects/{project_number}/secrets/{secret_id}/versions/{version_id}"
+
+        # Access the secret version.
+        response = client.access_secret_version(request={"name": name})
+
+        # Return the decoded payload.
+        self.json_key = response.payload.data.decode('UTF-8')
+        return self.json_key
+
+    def get_credentials(self):
+        if self.credentials is None:
+            secret_id = self.config.get('secret_id', None)
+            if secret_id is not None:
+                print(f'Trying to load secret {secret_id}')
+                json_key_str = self.access_secret_version()
+                self.credentials = service_account.Credentials.from_service_account_info(json.loads(json_key_str))                
+            else:
+                #os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'
+                self.credentials = GoogleCredentials.get_application_default()
+        return self.credentials
+
     def list_zones(self, project_id = None):
         """Lists all GCP regions and zones."""
 
-        credentials = GoogleCredentials.get_application_default()
+        # if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None) is None:
+        #     json_key_str = access_secret_version(project_id, secret_id)
+        #     credentials = service_account.Credentials.from_service_account_info(json.loads(json_key_str))
+        # else:
+        #     credentials = GoogleCredentials.get_application_default()
+        credentials = self.get_credentials()
+
         compute = discovery.build('compute', 'v1', credentials=credentials)
         projects = [project_id] if project_id is not None else self.config['projects']
         ret = []
@@ -50,7 +118,8 @@ class GCP_Helpers():
     def get_compute_engine_status(self): 
         #project_id = None, zones = None):  # Add project_id as an argument
         """Retrieves and prints the status of Compute Engine instances."""
-        credentials = GoogleCredentials.get_application_default()
+        # credentials = GoogleCredentials.get_application_default()
+        credentials = self.get_credentials()
         compute = discovery.build('compute', 'v1', credentials=credentials)
         ret = []
         projects = self.config['projects'] #if project_id is None else [project_id]
@@ -82,7 +151,8 @@ class GCP_Helpers():
 
     def get_cloud_sql_status(self):  # Add project_id as an argument
         """Retrieves and prints the status of Cloud SQL instances."""
-        credentials = GoogleCredentials.get_application_default()
+        # credentials = GoogleCredentials.get_application_default()
+        credentials = self.get_credentials()
         sqladmin = discovery.build('sqladmin', 'v1beta4', credentials=credentials)
         ret = []
         try:
@@ -109,7 +179,8 @@ class GCP_Helpers():
 
     def get_gke_cluster_status(self):
         """Retrieves and prints the status of GKE clusters."""
-        credentials = GoogleCredentials.get_application_default()
+        # credentials = GoogleCredentials.get_application_default()
+        credentials = self.get_credentials()
         container = discovery.build('container', 'v1beta1', credentials=credentials)
 
         ret = []

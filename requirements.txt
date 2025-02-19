@@ -1,6 +1,8 @@
 google-api-python-client
 google-auth 
 google-auth-httplib2
+google-cloud-secret-manager
+google-cloud-resource-manager
 oauth2client
 Flask
 
