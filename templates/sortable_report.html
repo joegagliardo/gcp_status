@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GCP Resource Summary</title>
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.tr-terminated {
+    background-color: #ffe0e0; /* Light red background for terminated rows */
+}
+</style>
+<script>
+function sortTable(tableId, columnIndex) {
+    let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    dir = "asc";
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[columnIndex];
+            y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+</script>
+</head>
+<body>
+
+<h1>GCP Resource Summary</h1>
+
+<h2>Compute Instances</h2>
+<table id="computeTable">
+    <thead>
+        <tr>
+            {% for key in data.compute_keys %}
+                <th onclick="sortTable('computeTable', {{ loop.index0 }})">{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.compute %}
+            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+                {% for key in data.compute_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>SQL Instances</h2>
+<table id="sqlTable">
+    <thead>
+        <tr>
+            {% for key in data.sql_keys %}
+                <th onclick="sortTable('sqlTable', {{ loop.index0 }})">{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.sql %}
+            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+                {% for key in data.sql_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>GKE Clusters</h2>
+<table id="gkeTable">
+    <thead>
+        <tr>
+            {% for key in data.gke_keys %}
+                <th onclick="sortTable('gkeTable', {{ loop.index0 }})">{{ key }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.gke %}
+            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+                {% for key in data.gke_keys %}
+                    <td>{{ item[key] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
