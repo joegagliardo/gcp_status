@@ -45,8 +45,8 @@ class GCP_Helpers():
         from google.cloud import storage
         self.credentials = None
         if config is None:
-            # config_env = os.environ['config']
-            config_env = "gs://surfn-peru/gcp_status_config.json"
+            config_env = os.environ['config']
+            # config_env = "gs://surfn-peru/gcp_status_config.json"
             if config_env.startswith('gs://'):
                 #logging.info(f"Config: {config_env}")
                 bucket_name, blob_name = config_env [5:].split('/')
