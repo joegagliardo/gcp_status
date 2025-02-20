@@ -23,6 +23,10 @@ th {
 .tr-terminated {
     background-color: #ffe0e0; /* Light red background for terminated rows */
 }
+
+.tr-running {
+    background-color: #e0ffe0; /* Light green background for running rows */
+}
 </style>
 <script>
 function sortTable(tableId, columnIndex) {
@@ -78,7 +82,7 @@ function sortTable(tableId, columnIndex) {
     </thead>
     <tbody>
         {% for item in data.compute %}
-            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+        <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% elif item.status and item.status.lower() == 'running' %}class="tr-running"{% endif %}>
                 {% for key in data.compute_keys %}
                     <td>{{ item[key] }}</td>
                 {% endfor %}
@@ -98,7 +102,7 @@ function sortTable(tableId, columnIndex) {
     </thead>
     <tbody>
         {% for item in data.sql %}
-            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+        <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% elif item.status and item.status.lower() == 'running' %}class="tr-running"{% endif %}>
                 {% for key in data.sql_keys %}
                     <td>{{ item[key] }}</td>
                 {% endfor %}
@@ -118,7 +122,7 @@ function sortTable(tableId, columnIndex) {
     </thead>
     <tbody>
         {% for item in data.gke %}
-            <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% endif %}>
+        <tr {% if item.status and item.status.lower() == 'terminated' %}class="tr-terminated"{% elif item.status and item.status.lower() == 'running' %}class="tr-running"{% endif %}>
                 {% for key in data.gke_keys %}
                     <td>{{ item[key] }}</td>
                 {% endfor %}
