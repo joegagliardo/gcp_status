@@ -27,7 +27,7 @@ def report():
     data['compute_keys'] = ['name', 'project', 'status', 'zone', 'private_ip', 'public_ip', 'license', 'disk_size']
     data['sql_keys'] = ['name', 'project', 'state', 'zone', 'private_ip', 'public_ip', 'db_version', 'disk_size']
     data['gke_keys'] = ['name', 'project', 'status', 'location', 'ipCidr', 'public_ip', 'node_pools']
-    return render_template('sorted_report.html', data=data)  # Pass the data to the template
+    return render_template('sortable_report.html', data=data)  # Pass the data to the template
 
 @app.route('/summary', methods=['GET'])  # Use POST for sending data
 def get_compute_summary_ws():
