@@ -21,7 +21,8 @@ CMD python3 main.py
 
 
 # docker build -t us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest .
-# 1225  docker push us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest
+# docker push us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest
+# gcloud run deploy gcp-status-service     --image us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest     --platform managed     --region us-central1     --allow-unauthenticated --set-env-vars config=gs://surfn-peru/gcp_status_config.json
 # gcloud run deploy gcp-status-service     --image us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest     --platform managed     --region us-central1     --allow-unauthenticated
 # docker build -t joegagliardo/gcp_helpers .
 # docker run -v /Users/joey/Dev/gcp_status:/gcp_status --name gcp_status -p8080:8080 -e GOOGLE_APPLICATION_CREDENTIALS="/gcp_status/surfn-peru-gcp-status.json" joegagliardo/gcp_status

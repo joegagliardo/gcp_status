@@ -41,13 +41,18 @@ def get_project_number(project_id):
     
 class GCP_Helpers():
     def __init__(self, config = None, zones = None):
+        global logging
         from google.cloud import storage
         self.credentials = None
         if config is None:
-            config_env = os.environ['config']
+            # config_env = os.environ['config']
+            config_env = "gs://surfn-peru/gcp_status_config.json"
             if config_env.startswith('gs://'):
-                bucket_name, blob_name = config_env[5:].split('/')
+                #logging.info(f"Config: {config_env}")
+                bucket_name, blob_name = config_env [5:].split('/')
                 self.config = get_config_from_gcs(bucket_name, blob_name)
+                print(self.config)
+                #logging.info(f"Config: {self.config}")
             elif os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
                     data = f.read()

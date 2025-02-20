@@ -1,5 +1,5 @@
 {
-    "region_prefixes": ["us-central"]
-    , "projects": ["surfn-peru"]
+    "region_prefixes": ["us-central","us-west4"]
+    , "projects": ["surfn-peru", "punta-hermosa"]
     , "secret_id": "gcp_status_secret"
 }
