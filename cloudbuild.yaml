@@ -1,4 +1,14 @@
 steps:
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "ARTIFACT_REGISTRY_LOCATION: ${_ARTIFACT_REGISTRY_LOCATION}"
+        echo "ARTIFACT_REGISTRY_REPOSITORY: ${_ARTIFACT_REGISTRY_REPOSITORY}"
+        echo "CLOUD_RUN_SERVICE_NAME: ${_CLOUD_RUN_SERVICE_NAME}"
+        echo "CLOUD_RUN_REGION: ${_CLOUD_RUN_REGION}"
+        echo "PROJECT_ID: $PROJECT_ID"
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
