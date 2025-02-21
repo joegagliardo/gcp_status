@@ -15,3 +15,4 @@ _ARTIFACT_REGISTRY_LOCATION: us-central1
 _ARTIFACT_REGISTRY_REPOSITORY: gcp-status
 _CLOUD_RUN_SERVICE_NAME: gcp-status-service
 _CLOUD_RUN_REGION: us-central1
+ 
