@@ -1,0 +1,17 @@
+# docker build -t us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest .
+# docker push us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest
+# gcloud run deploy gcp-status-service     --image us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest     --platform managed     --region us-central1     --allow-unauthenticated --set-env-vars config=gs://surfn-peru/gcp_status_config.json
+# gcloud run deploy gcp-status-service     --image us-central1-docker.pkg.dev/surfn-peru/gcp-status/gcp_status:latest     --platform managed     --region us-central1     --allow-unauthenticated
+# docker build -t joegagliardo/gcp_helpers .
+# docker run -v /Users/joey/Dev/gcp_status:/gcp_status --name gcp_status -p8080:8080 -e GOOGLE_APPLICATION_CREDENTIALS="/gcp_status/surfn-peru-gcp-status.json" joegagliardo/gcp_status
+
+
+# docker run --name gcp_status -p 8080:8080 -v /Users/joey/Dev/gcp_status:/app -e GOOGLE_APPLICATION_CREDENTIALS=/app/surfn-peru-gcp-status.json joegagliardo/gcp_status
+
+
+
+Cloud run
+_ARTIFACT_REGISTRY_LOCATION: us-central1
+_ARTIFACT_REGISTRY_REPOSITORY: gcp-status
+_CLOUD_RUN_SERVICE_NAME: gcp-status-service
+_CLOUD_RUN_REGION: us-central1
