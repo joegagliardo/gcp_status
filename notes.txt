@@ -16,3 +16,11 @@ _ARTIFACT_REGISTRY_REPOSITORY: gcp-status
 _CLOUD_RUN_SERVICE_NAME: gcp-status-service
 _CLOUD_RUN_REGION: us-central1
  
+
+
+
+gcloud iam service-accounts add-iam-policy-binding \
+  1087744597190-compute@developer.gserviceaccount.com \
+  --member="serviceAccount:1087744597190@cloudbuild.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser"
+  

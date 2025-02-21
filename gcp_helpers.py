@@ -122,7 +122,7 @@ class GCP_Helpers():
                         zone_name = zone['name']
                         ret.append(zone_name)
                 else:
-                    print(f"    No zones found in this region.")
+                    print(f"    No zones found in this region for project_id {project_id}")
         except Exception as e:
             print(f"Error listing regions and zones: {e}")
 
@@ -163,7 +163,7 @@ class GCP_Helpers():
                             data = dict(project = project_id, name = name, status = status, zone = zone, private_ip = private_ip, public_ip = public_ip, license = license, disk_size = disk_size)
                             ret.append(data)
                     else:
-                        print(f"No Compute Engine instances found in {zone}.")
+                        print(f"No Compute Engine instances found in {zone} for project_id {project_id}.")
         except Exception as e:
             print(f"Error retrieving Compute Engine instances: {e}")
         return ret
@@ -227,7 +227,7 @@ class GCP_Helpers():
                                 # print(cluster)
                                 # print(f"  - {name} (Location: {location}): {status}")
                         else:
-                            print("No GKE clusters found.")
+                            print(f"No GKE clusters found in zone: {zone} for project {project_id}.")
 
                     except Exception as e:
                         print(f"Error retrieving GKE clusters: {e}")
