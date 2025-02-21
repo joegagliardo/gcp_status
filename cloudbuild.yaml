@@ -9,10 +9,11 @@ steps:
         echo "CLOUD_RUN_SERVICE_NAME: ${_CLOUD_RUN_SERVICE_NAME}"
         echo "CLOUD_RUN_REGION: ${_CLOUD_RUN_REGION}"
         echo "PROJECT_ID: $PROJECT_ID"
+        echo "SHORT_SHA: $SHORT_SHA"
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:latest', '.']
+    args: ['build', '-t', '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:$SHORT_SHA', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:latest']
+    args: ['push', '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:$SHORT_SHA']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
@@ -20,12 +21,14 @@ steps:
       'deploy',
       '${_CLOUD_RUN_SERVICE_NAME}',
       '--image',
-      '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:latest',
+      '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:$SHORT_SHA',
       '--region',
       '${_CLOUD_RUN_REGION}',
       '--platform',
       'managed',
-      '--allow-unauthenticated' # Remove this line if you need authentication.
+      '--allow-unauthenticated', # Remove this line if you need authentication.
+      '--set-env-vars',
+      'config=gs://surfn-peru/gcp_status_config.json'
     ]
 images:
-  - '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:latest'
+  - '${_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/gcp_status:$SHORT_SHA'
