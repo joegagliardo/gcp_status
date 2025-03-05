@@ -68,7 +68,7 @@ if __name__ == "__main__":
     #             if any(zone.startswith(prefix) for prefix in region_prefixes)})
     # else:
     #     global_zones = list(set(global_zones))
-    logging.info("Start GCP_Helpers")
+    logging.info("Start GCP_Helpers.")
     h = GCP_Helpers()
     logging.info("End GCP_Helpers")
     
